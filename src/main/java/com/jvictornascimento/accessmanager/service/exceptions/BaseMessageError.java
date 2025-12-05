@@ -21,6 +21,8 @@ public class BaseMessageError {
     public static final BaseMessageError USER_NOT_FOUND_BY_ID = new BaseMessageError("user.notFound.id");
     public static final BaseMessageError USER_EMAIL_ALREADY_EXISTS = new BaseMessageError("user.emailAlreadyExists");
     public static final BaseMessageError USER_REQUIRED_FIELDS = new BaseMessageError("user.requiredField");
+    public static final BaseMessageError USER_PASSWORD = new BaseMessageError("user.password");
+    public static final BaseMessageError USER_PASSWORD_VALID = new BaseMessageError("user.password.valid");
 
     public BaseMessageError params(final String ... params) {
         this.params = ArrayUtils.clone(params);

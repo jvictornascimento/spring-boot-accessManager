@@ -7,6 +7,7 @@ import com.jvictornascimento.accessmanager.dto.out.UserResponseDTO;
 import com.jvictornascimento.accessmanager.repository.UserRepository;
 import com.jvictornascimento.accessmanager.service.exceptions.EmailAlreadyExistsException;
 import com.jvictornascimento.accessmanager.service.exceptions.UserNotFoundException;
+import com.jvictornascimento.accessmanager.service.utils.validation.IValidatePassword;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import static com.jvictornascimento.accessmanager.service.exceptions.BaseMessage
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
+    private final List<IValidatePassword> validatePassword;
     @Override
     public UserResponseDTO getUserById(Long id) {
         var user = userRepository.findById(id).orElseThrow(
@@ -38,7 +40,12 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO insertUser(UserRequestDTO requestDTO) {
         var newUser = Optional.of(requestDTO)
                 .filter(user -> !userRepository.existsByEmail(requestDTO.email()))
-                        .map(request -> userRepository.save(mapper.fromEntity(request)))
+                        .map(request -> {
+                            for(IValidatePassword validators: validatePassword){
+                                validators.valid(request.password());
+                            }
+                            return userRepository.save(mapper.fromEntity(request));
+                        })
                                 .orElseThrow(()-> new EmailAlreadyExistsException(USER_EMAIL_ALREADY_EXISTS.getMassage()));
         return mapper.fromOut(newUser);
     }

@@ -1,6 +1,7 @@
 package com.jvictornascimento.accessmanager.controller.exceptions;
 
 import com.jvictornascimento.accessmanager.service.exceptions.EmailAlreadyExistsException;
+import com.jvictornascimento.accessmanager.service.exceptions.PasswordValidationException;
 import com.jvictornascimento.accessmanager.service.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,13 @@ public class ControllerExceptionHandler {
         e.getBindingResult().getFieldErrors().forEach(fieldError -> fieldsError.put( fieldError.getField(), fieldError.getDefaultMessage()));
         var fieldValidationError  = new FieldValidationError( Instant.now(), status.value(), error, fieldsError, request.getRequestURI());
         return ResponseEntity.status(status).body(fieldValidationError);
+    }
+    @ExceptionHandler(PasswordValidationException.class)
+    public ResponseEntity<StandardError> validationPassword(PasswordValidationException e, HttpServletRequest request) {
+        var error = USER_PASSWORD.getMassage();
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
+        var standardError = new StandardError( Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
     }
 
 }
