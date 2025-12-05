@@ -1,0 +1,14 @@
+api:
+  prefix: "api/v1"
+spring:
+  application:
+    name: AccessManager
+  datasource:
+    url: jdbc:postgresql://localhost:5432/usermanagerdb
+    username: dled
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
