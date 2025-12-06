@@ -4,11 +4,13 @@ import com.jvictornascimento.accessmanager.dto.in.UserRequestDTO;
 import com.jvictornascimento.accessmanager.dto.in.UserUpdateRequestDTO;
 import com.jvictornascimento.accessmanager.dto.mapper.UserMapper;
 import com.jvictornascimento.accessmanager.dto.out.UserResponseDTO;
+import com.jvictornascimento.accessmanager.model.User;
 import com.jvictornascimento.accessmanager.repository.UserRepository;
 import com.jvictornascimento.accessmanager.service.exceptions.EmailAlreadyExistsException;
 import com.jvictornascimento.accessmanager.service.exceptions.UserNotFoundException;
 import com.jvictornascimento.accessmanager.service.utils.validation.IValidatePassword;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
     private final List<IValidatePassword> validatePassword;
+    private final PasswordEncoder passwordEncoder;
     @Override
     public UserResponseDTO getUserById(Long id) {
         var user = userRepository.findById(id).orElseThrow(
@@ -41,10 +44,16 @@ public class UserServiceImpl implements UserService {
         var newUser = Optional.of(requestDTO)
                 .filter(user -> !userRepository.existsByEmail(requestDTO.email()))
                         .map(request -> {
-                            for(IValidatePassword validators: validatePassword){
+                            for(IValidatePassword validators: validatePassword) {
                                 validators.valid(request.password());
                             }
-                            return userRepository.save(mapper.fromEntity(request));
+                            return userRepository.save(new User(
+                                    null,
+                                    request.name(),
+                                    request.birthdate(),
+                                    request.email(),
+                                    passwordEncoder.encode(request.password())
+                            ));
                         })
                                 .orElseThrow(()-> new EmailAlreadyExistsException(USER_EMAIL_ALREADY_EXISTS.getMassage()));
         return mapper.fromOut(newUser);

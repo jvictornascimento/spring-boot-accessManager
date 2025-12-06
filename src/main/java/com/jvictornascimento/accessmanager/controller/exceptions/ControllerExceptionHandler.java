@@ -1,6 +1,7 @@
 package com.jvictornascimento.accessmanager.controller.exceptions;
 
 import com.jvictornascimento.accessmanager.service.exceptions.EmailAlreadyExistsException;
+import com.jvictornascimento.accessmanager.service.exceptions.InvalidLoginException;
 import com.jvictornascimento.accessmanager.service.exceptions.PasswordValidationException;
 import com.jvictornascimento.accessmanager.service.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,6 +65,13 @@ public class ControllerExceptionHandler {
     public ResponseEntity<StandardError> validationPassword(PasswordValidationException e, HttpServletRequest request) {
         var error = USER_PASSWORD.getMassage();
         HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
+        var standardError = new StandardError( Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<StandardError> validationPassword(InvalidLoginException e, HttpServletRequest request) {
+        var error = LOGIN_ERROR.getMassage();
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         var standardError = new StandardError( Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);
     }

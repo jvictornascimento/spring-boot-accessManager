@@ -23,6 +23,8 @@ public class BaseMessageError {
     public static final BaseMessageError USER_REQUIRED_FIELDS = new BaseMessageError("user.requiredField");
     public static final BaseMessageError USER_PASSWORD = new BaseMessageError("user.password");
     public static final BaseMessageError USER_PASSWORD_VALID = new BaseMessageError("user.password.valid");
+    public static final BaseMessageError LOGIN_ERROR = new BaseMessageError("login.error");
+    public static final BaseMessageError LOGIN_INVALID_REQUEST = new BaseMessageError("login.badlogin");
 
     public BaseMessageError params(final String ... params) {
         this.params = ArrayUtils.clone(params);

@@ -1,5 +1,8 @@
 api:
-  prefix: "api/v1"
+  prefix: "/api/v1"
+  security:
+    token:
+      secret: my-secret-token
 spring:
   application:
     name: AccessManager
