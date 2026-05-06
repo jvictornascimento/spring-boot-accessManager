@@ -13,14 +13,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter)
-			throws Exception {
+	public SecurityFilterChain securityFilterChain(
+			HttpSecurity http,
+			JwtAuthenticationFilter jwtAuthenticationFilter,
+			CorsConfigurationSource corsConfigurationSource
+	) throws Exception {
 		return http
+			.cors(cors -> cors.configurationSource(corsConfigurationSource))
 			.csrf(AbstractHttpConfigurer::disable)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.exceptionHandling(exception -> exception
@@ -40,6 +47,20 @@ public class SecurityConfig {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
+		var configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+		configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+		configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
+		configuration.setAllowCredentials(corsProperties.isAllowCredentials());
+
+		var source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+
+		return source;
 	}
 
 	@Bean
