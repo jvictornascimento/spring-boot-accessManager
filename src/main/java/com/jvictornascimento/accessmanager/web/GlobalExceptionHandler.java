@@ -48,4 +48,15 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
 	}
 
+	@ExceptionHandler(InvalidCredentialsException.class)
+	public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsException exception) {
+		var body = ApiError.of(
+			HttpStatus.UNAUTHORIZED.value(),
+			HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+			exception.getMessage()
+		);
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+	}
+
 }
