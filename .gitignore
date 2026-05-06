@@ -43,3 +43,14 @@ build/
 ai-notes/
 *.prompt.md
 codex-*.log
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
