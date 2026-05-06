@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### AI / assistant local context ###
+.codex/
+.openai/
+.aider*
+.continue/
+.cursor/
+.windsurf/
+.claude/
+ai-notes/
+*.prompt.md
+codex-*.log
