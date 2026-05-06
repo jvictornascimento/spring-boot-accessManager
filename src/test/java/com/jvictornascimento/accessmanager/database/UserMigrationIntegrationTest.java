@@ -36,6 +36,7 @@ class UserMigrationIntegrationTest {
 		var seedUsers = jdbcClient.sql("""
 				select email, password_hash
 				from users
+				where email in ('admin@bearflow.local', 'user@bearflow.local')
 				order by email
 				""")
 			.query((rs, rowNum) -> new SeedUserRow(rs.getString("email"), rs.getString("password_hash")))
