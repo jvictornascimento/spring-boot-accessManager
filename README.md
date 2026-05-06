@@ -117,6 +117,15 @@ Resposta esperada:
 }
 ```
 
+Documentacao Swagger/OpenAPI:
+
+| Recurso | URL local |
+| --- | --- |
+| Swagger UI | `http://localhost:8080/swagger-ui/index.html` |
+| OpenAPI JSON | `http://localhost:8080/v3/api-docs` |
+
+A documentacao descreve os contratos de autenticacao, CRUD de usuarios, consulta de clima, exemplos de payload e respostas de erro. Para testar endpoints protegidos no Swagger UI, execute o login, copie o `accessToken` retornado e use o botao `Authorize` com o valor no formato `Bearer <ACCESS_TOKEN>`.
+
 ### Frontend
 
 ```bash
@@ -191,6 +200,7 @@ Categorias cobertas no backend:
 - Testes de migration/Flyway.
 - Testes de repository com H2.
 - Testes de integracao HTTP para CRUD, auth e weather.
+- Testes de integracao da documentacao OpenAPI/Swagger.
 - Teste E2E de backend para login + JWT + cookie + consulta de clima com OpenWeather mockada.
 
 Frontend:
