@@ -12,3 +12,14 @@ export type LoginResponse = {
   accessToken: string;
   user: UserResponse;
 };
+
+export type LoginRequest = {
+  email: string;
+  password: string;
+};
+
+export type RegisterRequest = {
+  name: string;
+  email: string;
+  password: string;
+};
