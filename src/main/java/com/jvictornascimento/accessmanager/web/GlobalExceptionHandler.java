@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -57,6 +58,33 @@ public class GlobalExceptionHandler {
 		);
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<ApiError> handleConstraintViolation(ConstraintViolationException exception) {
+		var details = exception.getConstraintViolations()
+			.stream()
+			.map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+			.toList();
+		var body = ApiError.of(
+			HttpStatus.BAD_REQUEST.value(),
+			HttpStatus.BAD_REQUEST.getReasonPhrase(),
+			"Validation failed",
+			details
+		);
+
+		return ResponseEntity.badRequest().body(body);
+	}
+
+	@ExceptionHandler(ExternalServiceException.class)
+	public ResponseEntity<ApiError> handleExternalService(ExternalServiceException exception) {
+		var body = ApiError.of(
+			HttpStatus.BAD_GATEWAY.value(),
+			HttpStatus.BAD_GATEWAY.getReasonPhrase(),
+			exception.getMessage()
+		);
+
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(body);
 	}
 
 }
