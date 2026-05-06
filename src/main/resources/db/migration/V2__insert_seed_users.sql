@@ -3,7 +3,7 @@ values
     (
         'Bear Flow Admin',
         'admin@bearflow.local',
-        '$2a$10$7EqJtq98hPqEX7fNZaFWoOhiJz2nIkCCwSYNlTUTa6R/Lm7JCq6aO',
+        '$2a$10$v..bVQ8yOgIY3Aoce.TGxe00WW/ZnPuGwTs6sCeuqppnFQuwWyojm',
         true,
         current_timestamp,
         current_timestamp
@@ -11,7 +11,7 @@ values
     (
         'Bear Flow User',
         'user@bearflow.local',
-        '$2a$10$7EqJtq98hPqEX7fNZaFWoOhiJz2nIkCCwSYNlTUTa6R/Lm7JCq6aO',
+        '$2a$10$v..bVQ8yOgIY3Aoce.TGxe00WW/ZnPuGwTs6sCeuqppnFQuwWyojm',
         true,
         current_timestamp,
         current_timestamp
