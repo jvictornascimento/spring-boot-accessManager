@@ -71,6 +71,7 @@ Nenhum secret real deve ser versionado. Configure os valores sensiveis no ambien
 | `JWT_REFRESH_TOKEN_EXPIRATION_DAYS` | Nao | Expiracao do refresh token |
 | `JWT_REFRESH_COOKIE_SECURE` | Nao | Define `Secure` no cookie |
 | `JWT_REFRESH_COOKIE_SAME_SITE` | Nao | Valor do `SameSite` do cookie |
+| `APP_CORS_ALLOWED_ORIGINS` | Sim | Origins permitidas para CORS, separadas por virgula |
 | `OPENWEATHER_API_URL` | Nao | URL base da OpenWeather |
 | `OPENWEATHER_API_KEY` | Sim | Chave da OpenWeather |
 
@@ -165,9 +166,16 @@ Variaveis uteis no compose:
 | `FRONTEND_PORT` | `3000` |
 | `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:8080` |
 | `JWT_SECRET` | placeholder local com mais de 32 caracteres |
+| `APP_CORS_ALLOWED_ORIGINS` | `http://localhost:3000` |
 | `OPENWEATHER_API_KEY` | `replace-me` |
 
 Em ambiente real, sobrescreva todos os valores sensiveis por variaveis do servidor ou secret manager.
+
+Para liberar mais de uma origem no CORS:
+
+```bash
+APP_CORS_ALLOWED_ORIGINS=https://app.example.com,https://admin.example.com
+```
 
 ## Testes
 
