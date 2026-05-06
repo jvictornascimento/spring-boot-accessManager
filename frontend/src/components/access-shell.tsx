@@ -4,6 +4,7 @@ import { CloudSun, LockKeyhole, ShieldCheck } from "lucide-react";
 import { AuthCard } from "@/components/auth-card";
 import type { LoginResponse } from "@/types/auth";
 import { useState } from "react";
+import { WeatherPanel } from "@/components/weather-panel";
 
 export function AccessShell() {
   const [session, setSession] = useState<LoginResponse | null>(null);
@@ -44,17 +45,7 @@ export function AccessShell() {
           </div>
         </div>
 
-        {session ? (
-          <section className="rounded-lg border border-slate-800 bg-slate-950 p-5 shadow-2xl shadow-black/30">
-            <p className="text-sm font-medium text-orange-300">Sessao ativa</p>
-            <h2 className="mt-1 text-2xl font-semibold text-white">{session.user.name}</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-400">
-              {session.user.email} esta autenticado. O access token esta mantido apenas em memoria nesta sessao do app.
-            </p>
-          </section>
-        ) : (
-          <AuthCard onAuthenticated={setSession} />
-        )}
+        {session ? <WeatherPanel accessToken={session.accessToken} userName={session.user.name} /> : <AuthCard onAuthenticated={setSession} />}
       </section>
     </main>
   );
