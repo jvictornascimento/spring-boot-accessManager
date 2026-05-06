@@ -1,10 +1,23 @@
-# Bear Flow AccessManager Weather API
+# Bear Flow AccessManager Weather
 
 API Spring Boot para demonstrar autenticacao com Spring Security, login com JWT, refresh token em cookie `HttpOnly`, CRUD simples de usuarios e consumo autenticado da OpenWeather por cidade usando Spring Cloud OpenFeign.
 
-Este repositorio sera evoluido como monorepo. O backend esta na raiz e o frontend Next.js ficara em `frontend/`.
+O projeto esta em monorepo: o backend fica na raiz e o frontend Next.js fica em `frontend/`. O foco tecnico principal e o backend, e o frontend demonstra o fluxo completo para avaliacao.
+
+## Estrutura
+
+```text
+.
+|-- src/                    # Backend Spring Boot
+|-- frontend/               # Frontend Next.js
+|-- docker-compose.yml      # Stack PostgreSQL + backend + frontend
+|-- Dockerfile              # Container do backend
+`-- README.md
+```
 
 ## Stack
+
+Backend:
 
 - Java 17
 - Spring Boot 4
@@ -17,6 +30,21 @@ Este repositorio sera evoluido como monorepo. O backend esta na raiz e o fronten
 - JWT com JJWT
 - Lombok
 - Maven Wrapper
+
+Frontend:
+
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+- Axios
+- Lucide React
+
+Infra:
+
+- Docker
+- Docker Compose
+- PostgreSQL em container para `prod`
 
 ## Profiles
 
@@ -62,6 +90,8 @@ Usuarios ficticios para desenvolvimento/testes:
 
 ## Rodando localmente
 
+### Backend
+
 ```bash
 ./mvnw spring-boot:run
 ```
@@ -86,7 +116,62 @@ Resposta esperada:
 }
 ```
 
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Por padrao, o frontend chama `http://localhost:8080`. Para alterar:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080 npm run dev
+```
+
+A primeira tela e o login da Bear Flow com opcao de cadastro. O access token fica apenas em memoria no estado do app; o refresh token e controlado pelo backend via cookie `HttpOnly`.
+
+## Docker
+
+O compose sobe PostgreSQL, backend e frontend nessa ordem efetiva:
+
+1. `postgres` fica saudavel via `pg_isready`.
+2. `backend` inicia com profile `prod` e aguarda o banco.
+3. `frontend` inicia apos o backend responder `/actuator/health`.
+
+Subir a stack:
+
+```bash
+docker compose up --build
+```
+
+Portas padrao:
+
+| Servico | Porta |
+| --- | --- |
+| Frontend | `3000` |
+| Backend | `8080` |
+| PostgreSQL | `5432` |
+
+Variaveis uteis no compose:
+
+| Variavel | Default local |
+| --- | --- |
+| `POSTGRES_DB` | `accessmanager` |
+| `POSTGRES_USER` | `accessmanager` |
+| `POSTGRES_PASSWORD` | `accessmanager-local-password` |
+| `BACKEND_PORT` | `8080` |
+| `FRONTEND_PORT` | `3000` |
+| `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:8080` |
+| `JWT_SECRET` | placeholder local com mais de 32 caracteres |
+| `OPENWEATHER_API_KEY` | `replace-me` |
+
+Em ambiente real, sobrescreva todos os valores sensiveis por variaveis do servidor ou secret manager.
+
 ## Testes
+
+Backend:
 
 ```bash
 ./mvnw -B test
@@ -99,6 +184,30 @@ Categorias cobertas no backend:
 - Testes de repository com H2.
 - Testes de integracao HTTP para CRUD, auth e weather.
 - Teste E2E de backend para login + JWT + cookie + consulta de clima com OpenWeather mockada.
+
+Frontend:
+
+```bash
+cd frontend
+npm run lint
+npm run build
+```
+
+Docker:
+
+```bash
+docker compose config
+docker build -t bear-flow-accessmanager-backend:local .
+docker build -t bear-flow-frontend:local ./frontend
+```
+
+## Fluxo Completo
+
+1. Criar usuario em `POST /api/users` ou usar seed ficticio.
+2. Fazer login em `POST /api/auth/login`.
+3. Guardar o `accessToken` retornado.
+4. Enviar `Authorization: Bearer <ACCESS_TOKEN>` em `GET /api/weather?city=Recife`.
+5. O backend consulta a OpenWeather via OpenFeign e retorna um DTO interno.
 
 ## Autenticacao
 
